@@ -5,6 +5,7 @@ from sklearn.externals import joblib
 import pyshark
 import xgboost
 from keras.models import load_model
+import matplotlib.pyplot as plt
 
 class AWIDClassifier(object):
 
@@ -148,6 +149,30 @@ class AWIDClassifier(object):
 		return self.df_in_use.values
 
 
+	def graph(self, chart_info):
+
+
+		ind = np.arange(17) 
+		width = 1
+		fig, ax = plt.subplots()
+		fig.set_size_inches(18, 12)
+		r = ax.bar(ind, chart_info, width, color='b')
+
+		r.get_height()
+		ax.text(rect.get_x() + rect.get_width()/2., 1.03*height,
+                '%d' % int(height),
+                ha='center', va='bottom')
+
+
+		ax.set_ylabel('Scores')
+		ax.set_title('Scores by group and gender')
+		ax.set_xticklabels(self.classes)
+		plt.show()
+
+
+
+
+
 	def get_attacks_info_from_pcap(self, filename):
 		command = 'tshark -r ' + filename +' -T fields -e frame.interface_id -e frame.offset_shift -e frame.time_epoch -e frame.time_delta -e frame.time_delta_displayed -e frame.time_relative -e frame.len -e frame.cap_len -e frame.marked -e frame.ignored -e radiotap.version -e radiotap.pad -e radiotap.length -e radiotap.present.tsft -e radiotap.present.flags -e radiotap.present.rate -e radiotap.present.channel -e radiotap.present.fhss -e radiotap.present.dbm_antsignal -e radiotap.present.dbm_antnoise -e radiotap.present.lock_quality -e radiotap.present.tx_attenuation -e radiotap.present.db_tx_attenuation -e radiotap.present.dbm_tx_power -e radiotap.present.antenna -e radiotap.present.db_antsignal -e radiotap.present.db_antnoise -e radiotap.present.rxflags -e radiotap.present.xchannel -e radiotap.present.mcs -e radiotap.present.ampdu -e radiotap.present.vht -e radiotap.present.reserved -e radiotap.present.rtap_ns -e radiotap.present.vendor_ns -e radiotap.present.ext -e radiotap.mactime -e radiotap.flags.cfp -e radiotap.flags.preamble -e radiotap.flags.wep -e radiotap.flags.frag -e radiotap.flags.fcs -e radiotap.flags.datapad -e radiotap.flags.badfcs -e radiotap.flags.shortgi -e radiotap.datarate -e radiotap.channel.freq -e radiotap.channel.flags.turbo -e radiotap.channel.flags.cck -e radiotap.channel.flags.ofdm -e radiotap.channel.flags.2ghz -e radiotap.channel.flags.5ghz -e radiotap.channel.flags.passive -e radiotap.channel.flags.dynamic -e radiotap.channel.flags.gfsk -e radiotap.channel.flags.gsm -e radiotap.channel.flags.sturbo -e radiotap.channel.flags.half -e radiotap.channel.flags.quarter -e radiotap.dbm_antsignal -e radiotap.antenna -e radiotap.rxflags.badplcp -e wlan.fc.type_subtype -e wlan.fc.version -e wlan.fc.type -e wlan.fc.subtype -e wlan.fc.ds -e wlan.fc.frag -e wlan.fc.retry -e wlan.fc.pwrmgt -e wlan.fc.moredata -e wlan.fc.protected -e wlan.fc.order -e wlan.duration -e wlan.ra -e wlan.da -e wlan.ta -e wlan.sa -e wlan.bssid -e wlan.frag -e wlan.seq -e wlan.bar.type -e wlan.ba.control.ackpolicy -e wlan.ba.control.multitid -e wlan.ba.control.cbitmap -e wlan.bar.compressed.tidinfo -e wlan.ba.bm -e wlan.fcs_good -e wlan_mgt.fixed.capabilities.ess -e wlan_mgt.fixed.capabilities.ibss -e wlan_mgt.fixed.capabilities.cfpoll.ap -e wlan_mgt.fixed.capabilities.privacy -e wlan_mgt.fixed.capabilities.preamble -e wlan_mgt.fixed.capabilities.pbcc -e wlan_mgt.fixed.capabilities.agility -e wlan_mgt.fixed.capabilities.spec_man -e wlan_mgt.fixed.capabilities.short_slot_time -e wlan_mgt.fixed.capabilities.apsd -e wlan_mgt.fixed.capabilities.radio_measurement -e wlan_mgt.fixed.capabilities.dsss_ofdm -e wlan_mgt.fixed.capabilities.del_blk_ack -e wlan_mgt.fixed.capabilities.imm_blk_ack -e wlan_mgt.fixed.listen_ival -e wlan_mgt.fixed.current_ap -e wlan_mgt.fixed.status_code -e wlan_mgt.fixed.timestamp -e wlan_mgt.fixed.beacon -e wlan_mgt.fixed.aid -e wlan_mgt.fixed.reason_code -e wlan_mgt.fixed.auth.alg -e wlan_mgt.fixed.auth_seq -e wlan_mgt.fixed.category_code -e wlan_mgt.fixed.htact -e wlan_mgt.fixed.chanwidth -e wlan_mgt.fixed.fragment -e wlan_mgt.tagged.all -e wlan_mgt.ssid -e wlan_mgt.ds.current_channel -e wlan_mgt.tim.dtim_count -e wlan_mgt.tim.dtim_period -e wlan_mgt.tim.bmapctl.multicast -e wlan_mgt.tim.bmapctl.offset -e wlan_mgt.country_info.environment -e wlan_mgt.rsn.version -e wlan_mgt.rsn.gcs.type -e wlan_mgt.rsn.pcs.count -e wlan_mgt.rsn.akms.count -e wlan_mgt.rsn.akms.type -e wlan_mgt.rsn.capabilities.preauth -e wlan_mgt.rsn.capabilities.no_pairwise -e wlan_mgt.rsn.capabilities.ptksa_replay_counter -e wlan_mgt.rsn.capabilities.gtksa_replay_counter -e wlan_mgt.rsn.capabilities.mfpr -e wlan_mgt.rsn.capabilities.mfpc -e wlan_mgt.rsn.capabilities.peerkey -e wlan_mgt.tcprep.trsmt_pow -e wlan_mgt.tcprep.link_mrg -e wlan.wep.iv -e wlan.wep.key -e wlan.wep.icv -e wlan.tkip.extiv -e wlan.ccmp.extiv -e wlan.qos.tid -e wlan.qos.priority -e wlan.qos.eosp -e wlan.qos.ack -e wlan.qos.amsdupresent -e wlan.qos.buf_state_indicated -e wlan.qos.bit4 -e wlan.qos.txop_dur_req -e wlan.qos.buf_state_indicated -e data.len -E header=y -E separator=, > temp.csv'
 		os.system(command)
@@ -158,9 +183,13 @@ class AWIDClassifier(object):
 			clf = joblib.load(self.model)
 		prediction = clf.predict(X)
 		pred = [i.index(max(i)) for i in prediction]
-		for i in range(16):
+		chart_info = []
+		for i in range(17):
 			counter = pred.count(i)
+			chart_info.append(counter)
 			print(self.classes[i], "{0:.3f}%".format( counter / len(pred)), counter)
+		
+		self.graph(chart_info)
 
 
 
@@ -169,7 +198,13 @@ class AWIDClassifier(object):
 		clf = joblib.load(self.model)
 		prediction = clf.predict(X)
 		pred = [i.index(max(i)) for i in prediction]
+		chart_info = []
 		for i in range(17):
 			counter = pred.count(i)
+			chart_info.append(counter)
 			print(self.classes[i], "{0:.3f}%".format( counter / len(pred)), counter)
+
+
+		self.graph(chart_info)
+
 
