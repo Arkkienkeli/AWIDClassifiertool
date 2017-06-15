@@ -155,21 +155,21 @@ class AWIDClassifier(object):
 		ind = np.arange(17) 
 		width = 1
 		fig, ax = plt.subplots()
-		fig.set_size_inches(18, 12)
+		fig.set_size_inches(18, 22)
 		r = ax.bar(ind, chart_info, width, color='b')
 
-		r.get_height()
-		ax.text(rect.get_x() + rect.get_width()/2., 1.03*height,
-                '%d' % int(height),
-                ha='center', va='bottom')
+		for i in range(len(r)):
+			height = r[i].get_height()
+			ax.text(r[i].get_x() + r[i].get_width()/2., 1.03*height,
+        	        '%d' % int(height),
+        	        ha='center', va='bottom')
 
 
-		ax.set_ylabel('Scores')
-		ax.set_title('Scores by group and gender')
+		ax.set_ylabel('Number of packets')
+		ax.set_title('Detected classes of packets in file')
+		ax.set_xticks(ind + width / 2)
 		ax.set_xticklabels(self.classes)
 		plt.show()
-
-
 
 
 
